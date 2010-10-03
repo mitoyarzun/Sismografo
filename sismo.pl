@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+$position_file = "/sys/devices/platform/hdaps/position";
 
 @old = (0,0);
 print "$old\n" ;
@@ -8,7 +9,8 @@ $oldtime = time();
 $timecount = 0;
 
 while (1) {
-  open(FILE, "</sys/devices/platform/hdaps/position") or die "Error";
+  sleep(0.01);
+  open(FILE, "<$position_file") or die "Error";
   $new = <FILE>;
   if ($new =~ m/\((.*),(.*)\)/) {
     #print "$1\n";
@@ -19,8 +21,8 @@ while (1) {
 #    print localtime() . " $new";
     @old = @new;
     if ($oldtime==time()) {
-      if ($timecount>=3) {
-        system("beep");
+      if ($timecount>=7) {
+        #system("beep");
         print localtime()." TEMBLOR!\n";
       }
       $timecount++;
